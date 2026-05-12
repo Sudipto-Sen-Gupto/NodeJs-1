@@ -13,6 +13,10 @@ import { products } from "../controller/products-controller";
             // res.end(JSON.stringify({message:"the route is products"}))
             products(req,res)
          }
+          
+        
+
+
         else {
             res.writeHead(404,{"content-type":"application.json"})
             res.end(JSON.stringify({"message":"the page does not found"}))

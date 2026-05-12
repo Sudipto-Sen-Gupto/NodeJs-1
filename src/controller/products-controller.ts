@@ -32,6 +32,11 @@ import { parsePostBody } from "../utility/parseBody";
     else if(id!==null && method==='GET'){
         const products=readServiceData()
         const product=products.find((p:productType)=>p.id===id)
+        
+         if(!product){
+             res.writeHead(404,{"Content-type":"application/json"})
+             res.end(JSON.stringify({message:"Not product available",data:product}))
+         }
 
         res.writeHead(200, {"Content-Type":"application/json"})
         res.end(JSON.stringify(
@@ -90,8 +95,26 @@ import { parsePostBody } from "../utility/parseBody";
                   
       }
 
+       else if(method==="DELETE" && id!==null){
+           const products=readServiceData()
+           const index=products.findIndex((p:productType)=>p.id===id)
+
+           if(index<0){
+               res.writeHead(404,{"Content-Type":"application/json"})
+               res.end(JSON.stringify({message:"404 not found"}))
+           }
+
+           products.splice(index,1)
+            writeServicePath(products)
+           res.writeHead(200,{"Content-Type":"application/json"})
+           res.end(JSON.stringify({
+            message:"Delete Successfully",
+            data:products
+        }))
+       }
+
      else{
           res.writeHead(404,{"Content-Type":"application/json"})
-          res.end("Not found")
+          res.end(JSON.stringify({message:"Not found"}))
      }
  }
