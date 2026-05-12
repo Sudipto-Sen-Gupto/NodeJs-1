@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { serviceData } from "../services/service";
+import { readServiceData, writeServicePath } from "../services/service";
 import type { productType } from "../types/productsType";
 import { parsePostBody } from "../utility/parseBody";
 
@@ -23,32 +23,50 @@ import { parsePostBody } from "../utility/parseBody";
     //         product_name:"Mobile"
     //     }
     //  ]
-     const products=  serviceData()
+     const products=  readServiceData()
      if(url==='/products'&& method==='GET'){
         res.writeHead(200,{"Content-Type":"application/json"})
         res.end(JSON.stringify({message:"products retrieve",data:products}))
      }
     
     else if(id!==null && method==='GET'){
-        const products=serviceData()
+        const products=readServiceData()
         const product=products.find((p:productType)=>p.id===id)
 
-        res.writeHead(200,{message:"product is found"})
-        res.end(JSON.stringify({
-            "Content-Type":"application/json",
-             data:product
-        }))
+        res.writeHead(200, {"Content-Type":"application/json"})
+        res.end(JSON.stringify(
+           
+            {
+                message:"product is found", 
+                data:product}
+            
+        ))
 
 
     } 
 
     else if(url==='/products' && method==='POST' ){    //data post
         const body= await parsePostBody(req)
-        console.log(body);
+        const products=readServiceData()
+        const newBody={
+            id: Date.now(),
+            ...body
+        }
+        // console.log(newBody);
+
+        products.push(newBody);
+        console.log(products);
+        writeServicePath(products)
+        // console.log(body);
+        
            res.writeHead(200,{
                 "Content-Type":"application/json"
            })
-           res.end(JSON.stringify({message:"Product post successfully"}))
+           res.end(JSON.stringify(
+            {
+                message:"Product post successfully", 
+                data:newBody
+            }))
     }
 
      else{

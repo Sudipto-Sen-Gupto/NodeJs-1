@@ -6,11 +6,12 @@ import type { IncomingMessage } from "node:http";
     return  new Promise((resolve,reject)=>{
                 let body='';
                 req.on('data',(chunkData)=>{
-                        body+=chunkData;
+                        body+=chunkData.toString();
                 })
                 req.on('end',()=>{
-                     try{
-                        resolve(body)
+                     try{ 
+                        const parsedBody = JSON.parse(body)
+                        resolve(parsedBody)
                      }
                      catch(error){
                         reject(error)
