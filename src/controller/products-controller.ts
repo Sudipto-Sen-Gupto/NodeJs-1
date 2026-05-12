@@ -68,6 +68,27 @@ import { parsePostBody } from "../utility/parseBody";
                 data:newBody
             }))
     }
+           
+      else if(method==='PUT' && id!==null){
+            const products=readServiceData();
+            const body=await parsePostBody(req)
+            const index=products.findIndex((p:productType)=>p.id===id) 
+                   console.log(index);
+            if(index<0){
+                res.writeHead(404,{"Content-Type":"application/json"})
+                res.end(JSON.stringify({message:"404 not found"}))
+            }
+                 products[index]={id:products[index].id,...body}
+                     
+                   writeServicePath(products)
+
+                 res.writeHead(200,{"Content-Type":"application/json"})
+                 res.end(JSON.stringify({
+                     message:"Update successfully",
+                     data:products[index]
+                 }))
+                  
+      }
 
      else{
           res.writeHead(404,{"Content-Type":"application/json"})

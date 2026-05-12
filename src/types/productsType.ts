@@ -1,6 +1,6 @@
 
 export type productType={
-    name:string;
+    product_type:string;
     price:number;
     id:number;
     description:string;
